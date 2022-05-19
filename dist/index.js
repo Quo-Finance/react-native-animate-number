@@ -14,7 +14,7 @@ import Timer from 'react-timer-mixin';
 
 const HALF_RAD = Math.PI/2
 
-export default class AnimateNumber extends Component {
+class AnimateNumber extends Component {
 
   props : {
     countBy? : ?number,
@@ -26,7 +26,8 @@ export default class AnimateNumber extends Component {
     onProgress : () => {},
     onFinish : () => {},
     startAt? : number,
-    initialValue? : number
+    initialValue?: number,
+    delayCount?: bool
   };
 
   static defaultProps = {
@@ -38,6 +39,8 @@ export default class AnimateNumber extends Component {
     formatter : (val) => val,
     onFinish : () => {}
   };
+
+  React.useImperativeHandle(this.props.ref, () => {console.log('clicked!!!!')});
 
   static TimingFunctions = {
 
@@ -57,7 +60,8 @@ export default class AnimateNumber extends Component {
 
   state : {
     value? : ?number,
-    displayValue? : ?number
+    displayValue?: ?number,
+    run?: bool
   };
 
   /**
@@ -81,7 +85,8 @@ export default class AnimateNumber extends Component {
     // default values of state and non-state variables
     this.state = {
       value : props.initialValue,
-      displayValue : props.formatter(props.initialValue)
+      displayValue: props.formatter(props.initialValue),
+      run: false
     }
     this.dirty = false;
     this.startFrom = 0;
@@ -180,3 +185,7 @@ export default class AnimateNumber extends Component {
   }
 
 }
+
+export default React.forwardRef((props, ref) => <AnimateNumber
+  innerRef={ref} {...props}
+/>);
